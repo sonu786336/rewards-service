@@ -18,7 +18,7 @@ Customers earn points for every dollar spent above a certain threshold.
 - │ │ │ ├── controller/ # Handles API requests
 - │ │ │ ├── service/ # Business logic implementation
 - │ │ │ ├── repository/ # Database interaction (JPA)
-- │ │ │ ├── model/ # Entity classes (Transaction)
+- │ │ │ ├── entity/ # Entity classes (Transaction)
 - │ │ │ ├── dto/ # Data Transfer Objects (DTOs)
 - │ │ │ ├── exception/ # Global exception handling
 - │ │ ├── resources/ 
