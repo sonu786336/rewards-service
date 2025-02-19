@@ -42,7 +42,7 @@ Customers earn points for every dollar spent above a certain threshold.
 1️⃣ **Clone the repository**:
 ```sh
 git clone https://github.com/sonu786336/rewards-service.git
-cd rewards-service
+cd rewards-service 
 ```
 
 2️⃣ Run the project using Maven: mvn spring-boot:run
@@ -57,6 +57,12 @@ cd rewards-service
 	- Data is stored in H2 database (in-memory DB).
 2. Data is stored in H2 database (in-memory DB).
 3. Optimistic Locking is enabled using @Version field.
+
+### 📌 Rewards Calculation Logic
+- The method `getRewardsPointsForTheMonths(Integer months)` calculates **reward points** for customers based on their transactions over a specified number of months.
+- See the full code Implementation in service package.
+  - │ │ │ ├── service
+  - │ │ │ │ ├──impl # Inside this package, added the logic for reward points calculation in RewardsServiceImpl.java.
 
 🌍 API Endpoints
 - POST :- /api/rewards/add → Add a single transaction
