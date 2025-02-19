@@ -1,22 +1,29 @@
 package com.rewardservice.dtos;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+//@Getter
+//@Setter
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class TransactionDTO {
     private Long customerId;
     private Double amount;
     private LocalDate transactionDate;
+
+    public TransactionDTO() {
+    }
+
+    public TransactionDTO(Long customerId, Double amount, LocalDate transactionDate) {
+        this.customerId = customerId;
+        this.amount = amount;
+        this.transactionDate = transactionDate;
+    }
 
     public Long getCustomerId() {
         return customerId;

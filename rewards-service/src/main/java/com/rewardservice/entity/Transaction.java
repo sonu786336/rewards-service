@@ -20,6 +20,10 @@ public class Transaction {
     private Double amount;
     private LocalDate transactionDate;
 
+    @Version
+    private Integer version = 0;
+
+
     public Transaction() {
     }
 

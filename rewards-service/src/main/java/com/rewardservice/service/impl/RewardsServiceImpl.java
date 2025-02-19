@@ -4,8 +4,11 @@ import com.rewardservice.dtos.TransactionDTO;
 import com.rewardservice.entity.Transaction;
 import com.rewardservice.repository.TransactionRepository;
 import com.rewardservice.service.inter_face.RewardsService;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,19 +41,30 @@ public class RewardsServiceImpl implements RewardsService {
 
     @Override
     public TransactionDTO addTransaction(TransactionDTO transactionDTO) {
+        if (transactionDTO == null) {
+            throw new IllegalArgumentException("TransactionDTO cannot be null");
+        }
         Transaction newTransaction = modelMapper.map(transactionDTO, Transaction.class);
+        newTransaction.setId(null);
         Transaction savedTransaction = transactionRepository.save(newTransaction);
         return modelMapper.map(savedTransaction, TransactionDTO.class);
     }
 
     @Override
     public List<TransactionDTO> addTransactions(List<TransactionDTO> transactionDTOList) {
+        if (transactionDTOList.isEmpty()) {
+            throw new IllegalArgumentException("TransactionDTO list cannot be empty");
+        }
         List<Transaction> newTransactions = transactionDTOList
                 .stream()
-                .map(transactionDTO -> modelMapper.map(transactionDTO, Transaction.class))
+                .map(transactionDTO -> {
+                    Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
+                    transaction.setId(null);
+                    return transaction;
+                })
                 .collect(Collectors.toList());
-        return transactionRepository.saveAll(newTransactions)
-                .stream()
+        List<Transaction> savedTransactions = transactionRepository.saveAll(newTransactions);
+        return savedTransactions.stream()
                 .map(transaction -> modelMapper.map(transaction, TransactionDTO.class))
                 .collect(Collectors.toList());
 
