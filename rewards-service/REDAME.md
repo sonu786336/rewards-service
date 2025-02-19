@@ -104,8 +104,10 @@ cd rewards-service
 ]
 ```
 
-- ✅ Above request will insert multiple or single transactions for different customers.
-- ✅ The database will automatically assign unique IDs to these transactions.
+
+✅ Above request will insert multiple or single transactions for different customers.
+
+✅ The database will automatically assign unique IDs to these transactions.
 
 📌 ApiCurl: Calculate reward points
 ```sh
