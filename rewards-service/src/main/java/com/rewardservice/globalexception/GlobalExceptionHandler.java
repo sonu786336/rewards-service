@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * Global exception handler for the application.
  */
 @RestControllerAdvice
-public class globalExceptionHandler {
+public class GlobalExceptionHandler {
 
     /**
      * Handles IllegalArgumentException and returns a BAD_REQUEST response.
