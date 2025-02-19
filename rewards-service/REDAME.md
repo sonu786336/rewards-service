@@ -1,26 +1,126 @@
-# Rewards API - Spring Boot Application
+# Rewards Service API
 
-## 📌 Overview
-This API calculates reward points for customers based on their transaction history.
+## 📌 Project Overview ##
+The **Rewards Service API** is a Spring Boot project that calculates **reward points** for customers based on their transactions.
+Customers earn points for every dollar spent above a certain threshold.
 
-## 🚀 How to Run the Project?
-1. Clone the repo:  git clone <your-repo-url> cd rewards-api
-2. Run the application: mvn spring-boot:run  
-3. Open API Endpoints: 
-   - `POST /api/rewards/add` (Add a transaction)
-   - (i) Api curl for add single transaction data
+---
 
-        curl --location 'http://localhost:8088/v1/api/rewards/add' \
+## 📁 Project Structure ##
+
+# rewards-service/
+- │── .mvn/
+- │── javadocs/
+- │── src/
+- │ ├── main/
+- │ │ ├── java/com/rewardservice/
+- │ │ │ ├── appconfig/ # configuration class for application-wide beans.
+- │ │ │ ├── controller/ # Handles API requests
+- │ │ │ ├── service/ # Business logic implementation
+- │ │ │ ├── repository/ # Database interaction (JPA)
+- │ │ │ ├── model/ # Entity classes (Transaction)
+- │ │ │ ├── dto/ # Data Transfer Objects (DTOs)
+- │ │ │ ├── exception/ # Global exception handling
+- │ │ ├── resources/ 
+- │ │ │ ├── application.properties # App configurations
+- │── target
+- │── .gitattributes
+- │── mvnw 
+- │── mvnw.cmd 
+- │── pom.xml # Maven dependencies
+- │── README.md # Project Documentation
+
+## 🚀 Technologies Used
+- **Java 17**
+- **Spring Boot**
+- **Spring Data JPA**
+- **H2 Database**
+- **JUnit & Mockito (for testing)**
+- **Maven**
+
+## 🛠 How to Run the Project
+1️⃣ **Clone the repository**:
+```sh
+git clone https://github.com/sonu786336/rewards-service.git
+cd rewards-service
+```
+
+2️⃣ Run the project using Maven: mvn spring-boot:run
+
+3️⃣ Access API in Postman at: http://localhost:8088/api/rewards
+
+## 📌 Implementation Details
+1. Customers earn reward points based on their transactions:
+	- $50 or below → 0 Points
+	- $51 - $100 → 1 Point per $
+	- Above $100 → 2 Points per $
+	- Data is stored in H2 database (in-memory DB).
+2. Data is stored in H2 database (in-memory DB).
+3. Optimistic Locking is enabled using @Version field.
+
+🌍 API Endpoints
+- POST :- /api/rewards/add → Add a single transaction
+- POST :- /api/rewards/add-multiple → Add multiple transactions
+- GET  :- /api/rewards?months=3 → Get reward points for the last X months
+
+
+🧪 Running Tests: mvn test
+
+📌Example: Add Single Transactions
+- POST /api/rewards/add
+```json
+{
+    "customerId": 101,
+    "amount": 120.0,
+    "transactionDate": "2025-02-10"
+}
+```
+
+📌 Example: Add Multiple Transactions
+- POST /api/rewards/add-multiple
+```json
+[
+  {
+    "customerId": 101,
+    "amount": 120.0,
+    "transactionDate": "2025-02-10"
+  },
+  {
+    "customerId": 101,
+    "amount": 75.0,
+    "transactionDate": "2025-01-15"
+  },
+  {
+    "customerId": 102,
+    "amount": 200.0,
+    "transactionDate": "2024-12-05"
+  }
+]
+```
+
+- ✅ Above request will insert multiple or single transactions for different customers.
+- ✅ The database will automatically assign unique IDs to these transactions.
+
+📌 ApiCurl: Calculate reward points
+```sh
+curl --location 'http://localhost:8088/v1/api/rewards?months=3'
+```
+📌 ApiCurl: Add Single Transactions
+
+```sh	
+curl --location 'http://localhost:8088/v1/api/rewards/add' \
         --header 'Content-Type: application/json' \
         --data '{
         "customerId":101,
         "amount":120.0,
         "transactionDate" : "2024-02-01"
         }'
-     
-   - (ii) Api curl for add multiple transaction data
+```
+		
+📌 ApiCurl: Add Multiple Transactions
 
-     curl --location 'http://localhost:8088/v1/api/rewards/add-multiple' \
+```sh	
+curl --location 'http://localhost:8088/v1/api/rewards/add-multiple' \
      --header 'Content-Type: application/json' \
      --data '[
      {
@@ -54,19 +154,7 @@ This API calculates reward points for customers based on their transaction histo
      "transactionDate": "2024-02-20"
      }
      ]'
+```
 
-- `GET /api/rewards` (Calculate reward points)
-    - (i) Api curl for rewards points for the months data
-
-    - curl --location 'http://localhost:8088/v1/api/rewards?months=3'
-  
-
-## 🔍 API Testing 
-- Use **Postman** or `curl` to send requests. 
-- Database can be accessed at `http://localhost:8088/h2-console`.
-
-## ✅ Technologies Used 
-- Java 17 
-- Spring Boot 
-- H2 Database 
-- JUnit & Mockito (For Testing)  
+📌 Contributors
+	- Sonu - Developer
