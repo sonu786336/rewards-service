@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Test class for RewardsService.
+ */
 @SpringBootTest
 class RewardsServiceApplicationTests {
     @Mock
@@ -91,21 +94,26 @@ class RewardsServiceApplicationTests {
 
     @Test
     void testAddTransaction_Success() {
+        // Mock Input Data
         TransactionDTO transactionDTO = new TransactionDTO(101L, 120.0, LocalDate.of(2025, 2, 10));
         Transaction transaction = new Transaction(null, 101L, 120.0, LocalDate.of(2025, 2, 10));
         Transaction savedTransaction = new Transaction(1L, 101L, 120.0, LocalDate.of(2025, 2, 10));
 
+        // Mock Behavior
         when(modelMapper.map(transactionDTO, Transaction.class)).thenReturn(transaction);
         when(transactionRepository.save(transaction)).thenReturn(savedTransaction);
         when(modelMapper.map(savedTransaction, TransactionDTO.class)).thenReturn(transactionDTO);
 
+        // Call Method
         TransactionDTO result = rewardsService.addTransaction(transactionDTO);
 
+        // Assertions
         assertNotNull(result);
         assertEquals(101L, result.getCustomerId());
         assertEquals(120.0, result.getAmount());
         assertEquals(LocalDate.of(2025, 2, 10), result.getTransactionDate());
 
+        // Verify Mock Interactions
         verify(transactionRepository, times(1)).save(transaction);
         verify(modelMapper, times(1)).map(transactionDTO, Transaction.class);
         verify(modelMapper, times(1)).map(savedTransaction, TransactionDTO.class);

@@ -5,7 +5,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-
+/**
+ * Entity class representing a transaction in the database.
+ */
 @Entity
 @Table(name = "transaction")
 //@Getter

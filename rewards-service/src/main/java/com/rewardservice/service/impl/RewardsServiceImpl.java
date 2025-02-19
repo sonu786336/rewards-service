@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Service class to handle business logic related to transactions.
+ */
 @Service
 //@RequiredArgsConstructor
 public class RewardsServiceImpl implements RewardsService {
@@ -27,6 +30,12 @@ public class RewardsServiceImpl implements RewardsService {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Retrieves the reward points for each customer for the specified number of months.
+     *
+     * @param months the number of months to consider; if null, defaults to 3 months
+     * @return a map where the key is the customer ID and the value is another map with the month as the key and the total reward points as the value
+     */
     @Override
     public Map<Long, Map<String, Integer>> getRewardsPointsForTheMonths(Integer months) {
         if (months == null) {
@@ -39,6 +48,12 @@ public class RewardsServiceImpl implements RewardsService {
         return calculateRewardsPoints(transactions);
     }
 
+    /**
+     * Add single transaction to the database
+     *
+     * @param transactionDTO The transaction data transfer object (DTO) containing transaction details.
+     * @return The saved transaction DTO with an assigned ID.
+     */
     @Override
     public TransactionDTO addTransaction(TransactionDTO transactionDTO) {
         if (transactionDTO == null) {
@@ -50,6 +65,12 @@ public class RewardsServiceImpl implements RewardsService {
         return modelMapper.map(savedTransaction, TransactionDTO.class);
     }
 
+    /**
+     * Adds multiple transactions to the database.
+     *
+     * @param transactionDTOList A list of transaction DTOs to be added.
+     * @return A list of saved transaction DTOs with assigned IDs
+     */
     @Override
     public List<TransactionDTO> addTransactions(List<TransactionDTO> transactionDTOList) {
         if (transactionDTOList.isEmpty()) {
@@ -70,6 +91,12 @@ public class RewardsServiceImpl implements RewardsService {
 
     }
 
+    /**
+     * calculating the range of date.
+     *
+     * @param months It is the number of months that need to be counted for the date range.
+     * @return It will return array for the date range
+     */
     private LocalDate[] calculateDateRange(Integer months) {
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusMonths(months).withDayOfMonth(1);
@@ -78,6 +105,14 @@ public class RewardsServiceImpl implements RewardsService {
         return new LocalDate[]{startDate, endDate};
     }
 
+    /**
+     * Fetches the transactions between two dates.
+     *
+     * @param startDate the start date
+     * @param endDate   the end date
+     * @return a list of transactions between the specified dates
+     * @throws IllegalArgumentException if no transactions are found for the specified date range
+     */
     private List<Transaction> fetchTransactions(LocalDate startDate, LocalDate endDate) {
         List<Transaction> transactions = transactionRepository.findByTransactionDateBetween(startDate, endDate);
         if (transactions.isEmpty()) {
@@ -86,6 +121,12 @@ public class RewardsServiceImpl implements RewardsService {
         return transactions;
     }
 
+    /**
+     * Calculates the reward points for each customer based on their transactions.
+     *
+     * @param transactions the list of transactions
+     * @return a map where the key is the customer ID and the value is another map with the month as the key and the total reward points as the value
+     */
     private Map<Long, Map<String, Integer>> calculateRewardsPoints(List<Transaction> transactions) {
         return transactions.stream()
                 .collect(Collectors.groupingBy(Transaction::getCustomerId,
@@ -93,6 +134,13 @@ public class RewardsServiceImpl implements RewardsService {
                                 Collectors.summingInt(txn -> calculatePoints(txn.getAmount())))));
     }
 
+    /**
+     * Calculates the reward points based on the transaction amount.
+     *
+     * @param amount the transaction amount
+     * @return the calculated reward points
+     * @throws IllegalArgumentException if the transaction amount is negative
+     */
     private int calculatePoints(Double amount) {
         if (amount == null || amount < 0) {
             throw new IllegalArgumentException("Transaction amount cannot be negative.");

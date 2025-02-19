@@ -5,7 +5,9 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-
+/**
+ * Data Transfer Object (DTO) for Transaction.
+ */
 @Data
 //@Getter
 //@Setter
