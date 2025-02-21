@@ -22,14 +22,16 @@ public class RewardsController {
     }
 
     /**
-     * Endpoint to retrieve the reward points for each customer for the specified number of months.
+     * Endpoint to get reward points for a customer over a specified number of months.
+     * If the customer ID or the number of months is not provided, it defaults to calculating for all customers over the last 3 months.
      *
-     * @param months the number of months to consider; if null, defaults to 3 months
-     * @return a map where the key is the customer ID and the value is another map with the month as the key and the total reward points as the value
+     * @param customerId the ID of the customer whose reward points are to be fetched; can be null
+     * @param months the number of months over which to calculate reward points; defaults to 3 if null
+     * @return a map where the key is the customer ID and the value is another map with the month as the key and the reward points as the value
      */
     @GetMapping
-    public Map<Long, Map<String, Integer>> getRewardsPointsForTheMonths(@RequestParam(required = false) Integer months) {
-        return rewardsService.getRewardsPointsForTheMonths(months);
+    public Map<Long, Map<String, Integer>> getRewardsPointsForTheMonths(@RequestParam(required = false) Long customerId,@RequestParam(required = false) Integer months) {
+        return rewardsService.getRewardsPointsForTheMonths(customerId,months);
     }
 
     /**

@@ -21,4 +21,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
      * @return a list of transactions that occurred between the specified dates
      */
     List<Transaction> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate);
+
+    List<Transaction> findByCustomerIdAndTransactionDateBetween(Long customerId , LocalDate startDate, LocalDate endDate);
 }

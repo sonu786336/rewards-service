@@ -17,7 +17,7 @@ public interface RewardsService {
      * @param months the number of months to consider
      * @return a map where the key is the customer ID and the value is another map with the month as the key and the total reward points as the value
      */
-    Map<Long, Map<String, Integer>> getRewardsPointsForTheMonths(Integer months);
+    Map<Long, Map<String, Integer>> getRewardsPointsForTheMonths(Long customerId,Integer months);
 
     /**
      * Adds a new transaction.

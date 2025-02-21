@@ -1,5 +1,6 @@
 package com.rewardservice.dtos;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 public class TransactionDTO {
     private Long customerId;
     private Double amount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING ,pattern = "yyyy-MM-dd")
     private LocalDate transactionDate;
 
     public TransactionDTO() {

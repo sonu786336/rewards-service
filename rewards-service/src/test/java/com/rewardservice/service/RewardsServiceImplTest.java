@@ -1,7 +1,8 @@
-package com.rewardservice;
+package com.rewardservice.service;
 
 import com.rewardservice.dtos.TransactionDTO;
 import com.rewardservice.entity.Transaction;
+import com.rewardservice.globalexception.RewardServiceException;
 import com.rewardservice.repository.TransactionRepository;
 import com.rewardservice.service.transactioneserviceimpl.RewardsServiceImpl;
 import com.rewardservice.utility.TransactionTransformer;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
  * Test class for RewardsService.
  */
 @SpringBootTest
-class TransactionSericeImplTest {
+class RewardsServiceImplTest {
     @Mock
     private TransactionRepository transactionRepository;
     @InjectMocks
@@ -55,7 +56,7 @@ class TransactionSericeImplTest {
         );
 
         when(transactionRepository.findByTransactionDateBetween(startDate, endDate)).thenReturn(transactions);
-        var rewards = rewardsService.getRewardsPointsForTheMonths(3);
+        var rewards = rewardsService.getRewardsPointsForTheMonths(null,3);
 
         assertNotNull(rewards);
         assertFalse(rewards.isEmpty());
@@ -68,8 +69,8 @@ class TransactionSericeImplTest {
     void testNoTransactionsFound() {
         when(transactionRepository.findByTransactionDateBetween(startDate, endDate)).thenReturn(List.of());
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            rewardsService.getRewardsPointsForTheMonths(3);
+        Exception exception = assertThrows(RewardServiceException.class, () -> {
+            rewardsService.getRewardsPointsForTheMonths(null,3);
         });
         String msg = "No transaction found for the months.";
         assertEquals(msg, exception.getMessage());
@@ -81,8 +82,8 @@ class TransactionSericeImplTest {
 
         when(transactionRepository.findByTransactionDateBetween(startDate, endDate)).thenReturn(transactions);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            rewardsService.getRewardsPointsForTheMonths(3);
+        Exception exception = assertThrows(RewardServiceException.class, () -> {
+            rewardsService.getRewardsPointsForTheMonths(null,3);
         });
 
         assertEquals("Transaction amount cannot be negative.", exception.getMessage());
@@ -131,7 +132,7 @@ class TransactionSericeImplTest {
     @Test
     void testAddTransaction_Failure_NullInput() {
         // Expect Exception
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(RewardServiceException.class, () -> {
             rewardsService.addTransaction(null);
         });
 
@@ -141,7 +142,7 @@ class TransactionSericeImplTest {
     @Test
     void testAddTransactions_Failure_EmptyList() {
         // Expect Exception
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(RewardServiceException.class, () -> {
             rewardsService.addTransactions(List.of());
         });
 
