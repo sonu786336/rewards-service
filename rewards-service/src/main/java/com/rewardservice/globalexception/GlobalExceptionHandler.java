@@ -12,6 +12,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     /**
+     * Handles RewardServiceException and returns a NOT_FOUND response.
+     *
+     * @param ex the RewardServiceException to handle
+     * @return a ResponseEntity containing the exception message and a NOT_FOUND status
+     */
+    @ExceptionHandler(RewardServiceException.class)
+    public ResponseEntity<String> handleIllegalArgumentsException(RewardServiceException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    /**
      * Handles IllegalArgumentException and returns a BAD_REQUEST response.
      *
      * @param ex the IllegalArgumentException

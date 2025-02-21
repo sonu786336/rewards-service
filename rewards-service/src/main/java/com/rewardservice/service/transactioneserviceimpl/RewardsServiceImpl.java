@@ -1,14 +1,12 @@
-package com.rewardservice.service.impl;
+package com.rewardservice.service.transactioneserviceimpl;
 
 import com.rewardservice.dtos.TransactionDTO;
 import com.rewardservice.entity.Transaction;
+import com.rewardservice.globalexception.RewardServiceException;
 import com.rewardservice.repository.TransactionRepository;
-import com.rewardservice.service.inter_face.RewardsService;
-import jakarta.transaction.Transactional;
-import org.modelmapper.ModelMapper;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import com.rewardservice.service.transactioneservice.RewardsService;
+import com.rewardservice.transformer.TransactionTransformer;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,11 +21,10 @@ import java.util.stream.Collectors;
 public class RewardsServiceImpl implements RewardsService {
 
     private final TransactionRepository transactionRepository;
-    private final ModelMapper modelMapper;
 
-    public RewardsServiceImpl(TransactionRepository transactionRepository, ModelMapper modelMapper) {
+
+    public RewardsServiceImpl(TransactionRepository transactionRepository) {
         this.transactionRepository = transactionRepository;
-        this.modelMapper = modelMapper;
     }
 
     /**
@@ -57,12 +54,12 @@ public class RewardsServiceImpl implements RewardsService {
     @Override
     public TransactionDTO addTransaction(TransactionDTO transactionDTO) {
         if (transactionDTO == null) {
-            throw new IllegalArgumentException("TransactionDTO cannot be null");
+            throw new RewardServiceException("TransactionDTO cannot be null");
         }
-        Transaction newTransaction = modelMapper.map(transactionDTO, Transaction.class);
+        Transaction newTransaction = TransactionTransformer.toEntity(transactionDTO);
         newTransaction.setId(null);
         Transaction savedTransaction = transactionRepository.save(newTransaction);
-        return modelMapper.map(savedTransaction, TransactionDTO.class);
+        return TransactionTransformer.toDTO(savedTransaction);
     }
 
     /**
@@ -74,19 +71,19 @@ public class RewardsServiceImpl implements RewardsService {
     @Override
     public List<TransactionDTO> addTransactions(List<TransactionDTO> transactionDTOList) {
         if (transactionDTOList.isEmpty()) {
-            throw new IllegalArgumentException("TransactionDTO list cannot be empty");
+            throw new RewardServiceException("TransactionDTO list cannot be empty");
         }
         List<Transaction> newTransactions = transactionDTOList
                 .stream()
                 .map(transactionDTO -> {
-                    Transaction transaction = modelMapper.map(transactionDTO, Transaction.class);
+                    Transaction transaction = TransactionTransformer.toEntity(transactionDTO);
                     transaction.setId(null);
                     return transaction;
                 })
                 .collect(Collectors.toList());
         List<Transaction> savedTransactions = transactionRepository.saveAll(newTransactions);
         return savedTransactions.stream()
-                .map(transaction -> modelMapper.map(transaction, TransactionDTO.class))
+                .map(TransactionTransformer::toDTO)
                 .collect(Collectors.toList());
 
     }
@@ -143,7 +140,7 @@ public class RewardsServiceImpl implements RewardsService {
      */
     private int calculatePoints(Double amount) {
         if (amount == null || amount < 0) {
-            throw new IllegalArgumentException("Transaction amount cannot be negative.");
+            throw new RewardServiceException("Transaction amount cannot be negative.");
         }
         int points = 0;
         if (amount > 100) {

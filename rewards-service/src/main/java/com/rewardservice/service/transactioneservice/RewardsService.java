@@ -1,4 +1,4 @@
-package com.rewardservice.service.inter_face;
+package com.rewardservice.service.transactioneservice;
 
 import com.rewardservice.dtos.TransactionDTO;
 

@@ -1,7 +1,7 @@
 package com.rewardservice.controller;
 
 import com.rewardservice.dtos.TransactionDTO;
-import com.rewardservice.service.inter_face.RewardsService;
+import com.rewardservice.service.transactioneservice.RewardsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +13,7 @@ import java.util.Map;
 @RestController
 //@RequiredArgsConstructor
 @RequestMapping("/v1/api/rewards")
+@RestControllerAdvice
 public class RewardsController {
     private final RewardsService rewardsService;
 
