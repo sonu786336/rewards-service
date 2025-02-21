@@ -5,7 +5,7 @@ import com.rewardservice.entity.Transaction;
 import com.rewardservice.globalexception.RewardServiceException;
 import com.rewardservice.repository.TransactionRepository;
 import com.rewardservice.service.transactioneservice.RewardsService;
-import com.rewardservice.transformer.TransactionTransformer;
+import com.rewardservice.utility.TransactionTransformer;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

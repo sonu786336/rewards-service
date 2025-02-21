@@ -4,7 +4,7 @@ import com.rewardservice.dtos.TransactionDTO;
 import com.rewardservice.entity.Transaction;
 import com.rewardservice.repository.TransactionRepository;
 import com.rewardservice.service.transactioneserviceimpl.RewardsServiceImpl;
-import com.rewardservice.transformer.TransactionTransformer;
+import com.rewardservice.utility.TransactionTransformer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

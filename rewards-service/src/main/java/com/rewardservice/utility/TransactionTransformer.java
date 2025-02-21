@@ -1,4 +1,4 @@
-package com.rewardservice.transformer;
+package com.rewardservice.utility;
 
 import com.rewardservice.dtos.TransactionDTO;
 import com.rewardservice.entity.Transaction;
