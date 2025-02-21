@@ -51,7 +51,7 @@ class RewardsControllerTest {
         when(rewardsService.getRewardsPointsForTheMonths(null, 3)).thenReturn(mockResponse);
         mockMvc.perform(get("/v1/api/rewards?months=3")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()) // ✅ Expect HTTP 200
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.101.January").value(120))
                 .andExpect(jsonPath("$.101.February").value(90));
     }
