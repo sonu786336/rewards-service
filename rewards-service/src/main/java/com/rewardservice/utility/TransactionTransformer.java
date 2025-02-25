@@ -1,5 +1,6 @@
 package com.rewardservice.utility;
 
+import com.rewardservice.dtos.CustomerData;
 import com.rewardservice.dtos.TransactionDTO;
 import com.rewardservice.entity.Transaction;
 
@@ -27,4 +28,5 @@ public class TransactionTransformer {
     public static TransactionDTO toDTO(Transaction transaction){
         return new TransactionDTO(transaction.getCustomerId(), transaction.getAmount(), transaction.getTransactionDate());
     }
+
 }

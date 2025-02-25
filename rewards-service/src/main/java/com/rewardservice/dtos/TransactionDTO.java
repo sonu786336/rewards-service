@@ -1,7 +1,6 @@
 package com.rewardservice.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,6 +18,13 @@ public class TransactionDTO {
     private Double amount;
     @JsonFormat(shape = JsonFormat.Shape.STRING ,pattern = "yyyy-MM-dd")
     private LocalDate transactionDate;
+
+    private Integer totalRewardsPoints;
+
+    private Integer monthDuration;
+
+    private String month;
+
 
     public TransactionDTO() {
     }
@@ -51,5 +57,29 @@ public class TransactionDTO {
 
     public void setTransactionDate(LocalDate transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public Integer getTotalRewardsPoints() {
+        return totalRewardsPoints;
+    }
+
+    public void setTotalRewardsPoints(Integer totalRewardsPoints) {
+        this.totalRewardsPoints = totalRewardsPoints;
+    }
+
+    public Integer getMonthDuration() {
+        return monthDuration;
+    }
+
+    public void setMonthDuration(Integer monthDuration) {
+        this.monthDuration = monthDuration;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 }

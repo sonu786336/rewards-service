@@ -1,16 +1,15 @@
 package com.rewardservice.service.transactioneserviceimpl;
 
-import com.rewardservice.dtos.TransactionDTO;
+import com.rewardservice.dtos.CustomerData;
 import com.rewardservice.entity.Transaction;
 import com.rewardservice.globalexception.RewardServiceException;
 import com.rewardservice.repository.TransactionRepository;
 import com.rewardservice.service.transactioneservice.RewardsService;
-import com.rewardservice.utility.TransactionTransformer;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -36,7 +35,7 @@ public class RewardsServiceImpl implements RewardsService {
      * @return a map where the key is the customer ID and the value is another map with the month as the key and the reward points as the value
      */
     @Override
-    public Map<Long, Map<String, Integer>> getRewardsPointsForTheMonths(Long customerId, Integer months) {
+    public ResponseEntity<List<CustomerData>> getRewardsPointsForTheMonths(Long customerId, Integer months) {
         if (months == null) {
             months = 3;
         }
@@ -44,51 +43,9 @@ public class RewardsServiceImpl implements RewardsService {
         LocalDate startDate = dateRange[0];
         LocalDate endDate = dateRange[1];
         List<Transaction> transactions = fetchTransactions(customerId,startDate, endDate);
-        return calculateRewardsPoints(transactions);
+        return calculateRewardsPoints(transactions,months);
     }
 
-    /**
-     * Add single transaction to the database
-     *
-     * @param transactionDTO The transaction data transfer object (DTO) containing transaction details.
-     * @return The saved transaction DTO with an assigned ID.
-     */
-    @Override
-    public TransactionDTO addTransaction(TransactionDTO transactionDTO) {
-        if (transactionDTO == null) {
-            throw new RewardServiceException("TransactionDTO cannot be null");
-        }
-        Transaction newTransaction = TransactionTransformer.toEntity(transactionDTO);
-        newTransaction.setId(null);
-        Transaction savedTransaction = transactionRepository.save(newTransaction);
-        return TransactionTransformer.toDTO(savedTransaction);
-    }
-
-    /**
-     * Adds multiple transactions to the database.
-     *
-     * @param transactionDTOList A list of transaction DTOs to be added.
-     * @return A list of saved transaction DTOs with assigned IDs
-     */
-    @Override
-    public List<TransactionDTO> addTransactions(List<TransactionDTO> transactionDTOList) {
-        if (transactionDTOList.isEmpty()) {
-            throw new RewardServiceException("TransactionDTO list cannot be empty");
-        }
-        List<Transaction> newTransactions = transactionDTOList
-                .stream()
-                .map(transactionDTO -> {
-                    Transaction transaction = TransactionTransformer.toEntity(transactionDTO);
-                    transaction.setId(null);
-                    return transaction;
-                })
-                .collect(Collectors.toList());
-        List<Transaction> savedTransactions = transactionRepository.saveAll(newTransactions);
-        return savedTransactions.stream()
-                .map(TransactionTransformer::toDTO)
-                .collect(Collectors.toList());
-
-    }
 
     /**
      * calculating the range of date.
@@ -132,11 +89,18 @@ public class RewardsServiceImpl implements RewardsService {
      * @param transactions the list of transactions
      * @return a map where the key is the customer ID and the value is another map with the month as the key and the total reward points as the value
      */
-    private Map<Long, Map<String, Integer>> calculateRewardsPoints(List<Transaction> transactions) {
-        return transactions.stream()
-                .collect(Collectors.groupingBy(Transaction::getCustomerId,
-                        Collectors.groupingBy(txn -> txn.getTransactionDate().getMonth().toString(),
-                                Collectors.summingInt(txn -> calculatePoints(txn.getAmount())))));
+
+    private ResponseEntity<List<CustomerData>> calculateRewardsPoints(List<Transaction> transactions, Integer months) {
+        List<CustomerData> customerDetails = transactions.stream().map(transaction -> {
+            int calculatedRewardsPoints = calculatePoints(transaction.getAmount());
+            CustomerData  customerData = new CustomerData();
+            customerData.setCustomerId(transaction.getCustomerId());
+            customerData.setTotalRewardsPoints(calculatedRewardsPoints);
+            customerData.setMonthName(transaction.getTransactionDate().getMonth().toString());
+            customerData.setMonthDuration(months);
+            return customerData;
+        }).collect(Collectors.toList());
+        return ResponseEntity.ok(customerDetails);
     }
 
     /**

@@ -1,11 +1,11 @@
 package com.rewardservice.controller;
 
-import com.rewardservice.dtos.TransactionDTO;
+import com.rewardservice.dtos.CustomerData;
 import com.rewardservice.service.transactioneservice.RewardsService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * REST Controller for handling transaction-related API requests.
@@ -29,31 +29,10 @@ public class RewardsController {
      * @param months the number of months over which to calculate reward points; defaults to 3 if null
      * @return a map where the key is the customer ID and the value is another map with the month as the key and the reward points as the value
      */
-    @GetMapping
-    public Map<Long, Map<String, Integer>> getRewardsPointsForTheMonths(@RequestParam(required = false) Long customerId,@RequestParam(required = false) Integer months) {
+    @GetMapping()
+    public ResponseEntity<List<CustomerData>> getRewardsPointsForTheMonths(@RequestParam(required = false) Long customerId, @RequestParam(required = false) Integer months) {
         return rewardsService.getRewardsPointsForTheMonths(customerId,months);
     }
 
-    /**
-     * Endpoint to add a new transaction.
-     *
-     * @param transactionDTO the transaction data transfer object containing the transaction details
-     * @return the added transaction data transfer object
-     */
-    @PostMapping("/add")
-    public TransactionDTO addTransaction(@RequestBody TransactionDTO transactionDTO) {
-        return rewardsService.addTransaction(transactionDTO);
-    }
-
-    /**
-     * Endpoint to add multiple transactions.
-     *
-     * @param transactionDTOList the list of transaction data transfer objects containing the transaction details
-     * @return the list of added transaction data transfer objects
-     */
-    @PostMapping("/add-multiple")
-    public List<TransactionDTO> addTransactions(@RequestBody List<TransactionDTO> transactionDTOList) {
-        return rewardsService.addTransactions(transactionDTOList);
-    }
 
 }
