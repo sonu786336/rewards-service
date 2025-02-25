@@ -100,7 +100,6 @@ public class RewardsServiceImpl implements RewardsService {
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusMonths(months).withDayOfMonth(1);
         LocalDate endDate = today.minusMonths(1).withDayOfMonth(today.minusMonths(1).lengthOfMonth());
-        System.out.print("Fetching transaction from " + startDate + " to " + endDate);
         return new LocalDate[]{startDate, endDate};
     }
 

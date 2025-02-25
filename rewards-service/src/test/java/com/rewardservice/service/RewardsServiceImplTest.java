@@ -40,7 +40,6 @@ class RewardsServiceImplTest {
         today = LocalDate.now();
         startDate = today.minusMonths(3).withDayOfMonth(1);
         endDate = today.minusMonths(1).withDayOfMonth(today.minusMonths(1).lengthOfMonth());
-        System.out.println("Test Running - Expected Date Range: " + startDate + " to " + endDate);
 
     }
 
